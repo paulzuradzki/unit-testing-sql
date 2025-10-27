@@ -12,7 +12,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:15
+        image: postgres:15-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -21,7 +21,7 @@ jobs:
           - 5432:5432
         options: >-
           --health-cmd pg_isready
-          --health-interval 10s
+          --health-interval 5s
           --health-timeout 5s
           --health-retries 5
 
