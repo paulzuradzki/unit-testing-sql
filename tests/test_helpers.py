@@ -1,5 +1,5 @@
 import pytest
-from helpers import create_mock_cte
+from helpers import create_mock_cte, merge_mock_cte_with_sql
 
 
 def test_create_mock_cte_basic():
@@ -74,3 +74,86 @@ def test_create_mock_cte_empty_rows_raises_error():
     """Test that empty rows raises ValueError"""
     with pytest.raises(ValueError, match="rows must not be empty"):
         create_mock_cte("empty_table", [])
+
+
+def test_merge_mock_cte_with_sql_basic():
+    """Test merging a mock CTE with SQL that has a single CTE"""
+    mock_cte = """\
+with orders as (
+    select 'North' as region, 100 as amount
+)"""
+
+    sql = """\
+with grouped as (
+    select region from orders
+)
+select * from grouped"""
+
+    result = merge_mock_cte_with_sql(mock_cte, sql)
+
+    expected = """\
+with orders as (
+    select 'North' as region, 100 as amount
+),
+grouped as (
+    select region from orders
+)
+select * from grouped"""
+
+    assert result == expected
+
+
+def test_merge_mock_cte_with_sql_multiple_ctes():
+    """Test merging preserves multiple existing CTEs"""
+    mock_cte = """\
+with orders as (
+    select 1 as id
+)"""
+
+    sql = """\
+with grouped as (
+    select id from orders
+),
+pivoted as (
+    select id from grouped
+)
+select * from pivoted"""
+
+    result = merge_mock_cte_with_sql(mock_cte, sql)
+
+    # Should only replace the first "with", preserving the comma-separated CTEs
+    expected = """\
+with orders as (
+    select 1 as id
+),
+grouped as (
+    select id from orders
+),
+pivoted as (
+    select id from grouped
+)
+select * from pivoted"""
+
+    assert result == expected
+
+
+def test_merge_mock_cte_with_sql_trailing_whitespace():
+    """Test that trailing whitespace in mock CTE is handled"""
+    mock_cte = """\
+with orders as (
+    select 1 as id
+)
+  """  # Extra whitespace at end
+
+    sql = "with grouped as (select * from orders) select * from grouped"
+
+    result = merge_mock_cte_with_sql(mock_cte, sql)
+
+    # Should strip trailing whitespace and add comma
+    expected = """\
+with orders as (
+    select 1 as id
+),
+grouped as (select * from orders) select * from grouped"""
+
+    assert result == expected

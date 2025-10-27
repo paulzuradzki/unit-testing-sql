@@ -39,3 +39,40 @@ def create_mock_cte(table_name: str, rows: list[dict]) -> str:
     cte_body = " union all\n".join(select_statements)
 
     return f"with {table_name} as (\n{cte_body}\n)"
+
+
+def merge_mock_cte_with_sql(mock_cte: str, sql: str) -> str:
+    """
+    Merge a mock CTE with existing SQL that has WITH clause.
+
+    This function prepends a mock CTE to SQL by replacing the first "with"
+    keyword. Only the first occurrence is replaced, so this works correctly
+    even if the SQL has multiple CTEs separated by commas.
+
+    Args:
+        mock_cte: Mock CTE starting with "with table_name as (...)"
+        sql: Original SQL query that starts with "with ..."
+
+    Returns:
+        Merged SQL with mock CTE prepended
+
+    Example:
+        >>> mock = "with orders as (select 'North' as region, 100 as amount)"
+        >>> sql = "with grouped as (select region from orders) select * from grouped"
+        >>> result = merge_mock_cte_with_sql(mock, sql)
+        >>> print(result)
+        with orders as (select 'North' as region, 100 as amount),
+        grouped as (select region from orders) select * from grouped
+
+    Example with multiple CTEs:
+        >>> sql = "with a as (...), b as (...) select * from b"
+        >>> # Only the first "with" is replaced, preserving the comma-separated CTEs
+    """
+    # Remove trailing whitespace from mock CTE and add comma separator
+    mock_cte = mock_cte.rstrip() + ","
+
+    # Replace ONLY the first "with " to merge CTEs properly
+    # The ", 1" argument ensures we don't replace "with" in other CTEs or strings
+    merged = sql.replace("with ", mock_cte + "\n", 1)
+
+    return merged

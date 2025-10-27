@@ -1,6 +1,7 @@
 from decimal import Decimal
+from importlib.resources import files
 from app.transform import pivot_and_sum
-from helpers import create_mock_cte
+from helpers import create_mock_cte, merge_mock_cte_with_sql
 
 def test_pivot_and_sum(db_conn):
 
@@ -36,11 +37,14 @@ def test_pivot_and_sum(db_conn):
     # Create mock CTE that replaces the real 'orders' table
     mock_orders_cte = create_mock_cte("orders", input_data)
 
+    # Load the real SQL file and merge with mock data
+    sql = files("app").joinpath("sql/transform.sql").read_text()
+    test_sql = merge_mock_cte_with_sql(mock_orders_cte, sql)
+
     #########
     # Act
     #########
-    # Pass mock CTE to pivot_and_sum function
-    actual_output = pivot_and_sum(conn=db_conn, mock_cte=mock_orders_cte)
+    actual_output = pivot_and_sum(conn=db_conn, sql=test_sql)
 
     #########
     # Assert
