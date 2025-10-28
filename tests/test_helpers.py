@@ -157,3 +157,43 @@ with orders as (
 grouped as (select * from orders) select * from grouped"""
 
     assert result == expected
+
+def test_merge_mock_cte_with_sql_lowercase_with():
+    """Test that merging is lowercase with"""
+    mock_cte = """\
+with orders as (
+    select 1 as id
+)"""
+
+    sql = """\
+with grouped as (select * from orders) select * from grouped"""
+
+    result = merge_mock_cte_with_sql(mock_cte, sql) 
+
+    expected = """\
+with orders as (
+    select 1 as id
+),
+grouped as (select * from orders) select * from grouped"""
+
+    assert result == expected
+    
+def test_merge_mock_cte_with_sql_uppercase_with():
+    """Test that merging is uppercase with"""
+    mock_cte = """\
+with orders as (
+    select 1 as id
+)"""
+
+    sql = """\
+WITH grouped as (select * from orders) select * from grouped"""
+
+    result = merge_mock_cte_with_sql(mock_cte, sql) 
+    
+    expected = """\
+with orders as (
+    select 1 as id
+),
+grouped as (select * from orders) select * from grouped"""
+
+    assert result == expected
