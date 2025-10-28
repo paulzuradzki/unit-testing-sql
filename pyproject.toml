@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "ipykernel>=7.1.0",
     "psycopg2>=2.9.11",
     "python-dotenv>=1.2.1",
     "sqlparse>=0.5.3",
@@ -26,5 +27,7 @@ build-backend = "setuptools.build_meta"
 
 [dependency-groups]
 dev = [
+    "ipytest>=0.14.2",
+    "nbconvert>=7.16.6",
     "pytest>=8.4.2",
 ]

@@ -1,6 +1,6 @@
 from decimal import Decimal
 from importlib.resources import files
-from app.transform import _pivot_and_sum, _pivot_and_unpivot
+from app.transform import run_sql
 from helpers import create_mock_cte, merge_mock_cte_with_sql
 from app.format import format_sql
 
@@ -46,7 +46,7 @@ def test_pivot_and_sum(db_conn):
     #########
     # Act
     #########
-    actual_output = _pivot_and_sum(conn=db_conn, sql=test_sql)
+    actual_output = run_sql(conn=db_conn, sql=test_sql)
 
     #########
     # Assert
@@ -86,7 +86,7 @@ def test_pivot_and_unpivot_data(db_conn):
     print(format_sql(test_sql))
 
     # Act
-    result = _pivot_and_unpivot(conn=db_conn, sql=test_sql)
+    result = run_sql(conn=db_conn, sql=test_sql)
 
     # Assert
     assert result == expected

@@ -23,7 +23,7 @@ def run_module():
             del sys.modules['run']
 
 
-@patch('run.pivot_and_sum')
+@patch('run.sum_and_pivot')
 @patch('run.psycopg2.connect')
 def test_run_script_main_function(mock_connect, mock_pivot, run_module):
     """Test the main function from run.py by importing it directly."""
