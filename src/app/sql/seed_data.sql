@@ -13,14 +13,14 @@ alter table orders
 add constraint amount_check check (amount > 0);
 -- insert data
 insert into orders (region, item, amount)
-values ('North', 'Apple', 100);
+values ('North', 'Apple', 201);
 insert into orders (region, item, amount)
-values ('South', 'Banana', 200);
+values ('South', 'Banana', 301);
 insert into orders (region, item, amount)
-values ('East', 'Cherry', 300);
+values ('East', 'Cherry', 401);
 insert into orders (region, item, amount)
-values ('West', 'Date', 400);
+values ('West', 'Date', 301);
 insert into orders (region, item, amount)
-values ('East', 'Elderberry', 300);
+values ('East', 'Elderberry', 301);
 insert into orders (region, item, amount)
-values ('West', 'Fig', 400);
+values ('West', 'Fig', 401);
