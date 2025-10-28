@@ -102,6 +102,25 @@ select * from grouped"""
 
     assert result == expected
 
+def test_merge_mock_cte_with_sql_no_with_keyword():
+    """Test merging a mock CTE with SQL that doesn't have a with keyword"""
+    mock_cte = """\
+with orders as (
+    select 'North' as region, 100 as amount
+)"""
+
+    sql = "select region from orders"
+
+    result = merge_mock_cte_with_sql(mock_cte, sql)
+
+    expected = """\
+with orders as (
+    select 'North' as region, 100 as amount
+)
+select region from orders"""
+
+    assert result == expected
+
 
 def test_merge_mock_cte_with_sql_multiple_ctes():
     """Test merging preserves multiple existing CTEs"""

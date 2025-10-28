@@ -45,20 +45,21 @@ def create_mock_cte(table_name: str, rows: list[dict]) -> str:
 
 def merge_mock_cte_with_sql(mock_cte: str, sql: str) -> str:
     """
-    Merge a mock CTE with existing SQL that has WITH clause.
+    Merge a mock CTE with SQL.
 
-    This function prepends a mock CTE to SQL by replacing the first "with"
-    keyword. Only the first occurrence is replaced, so this works correctly
-    even if the SQL has multiple CTEs separated by commas.
+    This function prepends a mock CTE to SQL. If the SQL already has a WITH clause,
+    it replaces the first "with" keyword. If not, it prepends the mock CTE directly.
+    Only the first occurrence is replaced, so this works correctly even if the SQL
+    has multiple CTEs separated by commas.
 
     Args:
         mock_cte: Mock CTE starting with "with table_name as (...)"
-        sql: Original SQL query that starts with "with ..."
+        sql: Original SQL query (with or without WITH clause)
 
     Returns:
         Merged SQL with mock CTE prepended
 
-    Example:
+    Example with existing WITH clause:
         >>> mock = "with orders as (select 'North' as region, 100 as amount)"
         >>> sql = "with grouped as (select region from orders) select * from grouped"
         >>> result = merge_mock_cte_with_sql(mock, sql)
@@ -66,16 +67,27 @@ def merge_mock_cte_with_sql(mock_cte: str, sql: str) -> str:
         with orders as (select 'North' as region, 100 as amount),
         grouped as (select region from orders) select * from grouped
 
-    Example with multiple CTEs:
-        >>> sql = "with a as (...), b as (...) select * from b"
-        >>> # Only the first "with" is replaced, preserving the comma-separated CTEs
+    Example without WITH clause:
+        >>> mock = "with orders as (select 'North' as region, 100 as amount)"
+        >>> sql = "select * from orders"
+        >>> result = merge_mock_cte_with_sql(mock, sql)
+        >>> print(result)
+        with orders as (select 'North' as region, 100 as amount)
+        select * from orders
     """
-    
 
-    # Remove trailing whitespace from mock CTE and add comma separator
-    mock_cte = mock_cte.rstrip() + ","
+    # Remove trailing whitespace from mock CTE
+    mock_cte = mock_cte.rstrip()
 
-    # Replace ONLY the first "with " (case-insensitive) to merge CTEs properly
-    merged = re.sub(r'\bwith\s+', mock_cte + "\n", sql, count=1, flags=re.IGNORECASE)
+    # Check if SQL has a WITH clause
+    has_with_clause = bool(re.search(r'\bwith\s+', sql, flags=re.IGNORECASE))
+
+    if has_with_clause:
+        # Add comma separator and replace the first "with"
+        mock_cte_with_comma = mock_cte + ","
+        merged = re.sub(r'\bwith\s+', mock_cte_with_comma + "\n", sql, count=1, flags=re.IGNORECASE)
+    else:
+        # No WITH clause, just prepend the mock CTE with a newline
+        merged = mock_cte + "\n" + sql
 
     return merged
