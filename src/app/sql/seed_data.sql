@@ -1,26 +1,23 @@
-create table orders (
-    id serial primary key,
-    region text,
-    item text,
-    amount integer
-);
--- constraints
--- region must be one of the following: 'North', 'South', 'East', 'West'
-alter table orders
-add constraint region_check check (region in ('North', 'South', 'East', 'West'));
--- amount must be greater than 0
-alter table orders
-add constraint amount_check check (amount > 0);
--- insert data
-insert into orders (region, item, amount)
-values ('North', 'Apple', 201);
-insert into orders (region, item, amount)
-values ('South', 'Banana', 301);
-insert into orders (region, item, amount)
-values ('East', 'Cherry', 401);
-insert into orders (region, item, amount)
-values ('West', 'Date', 301);
-insert into orders (region, item, amount)
-values ('East', 'Elderberry', 301);
-insert into orders (region, item, amount)
-values ('West', 'Fig', 401);
+CREATE TABLE orders (id serial PRIMARY KEY, region text, item text, amount integer);
+
+ALTER TABLE orders ADD CONSTRAINT region_check CHECK (region IN ('North', 'South', 'East',
+                                                                 'West'));
+ALTER TABLE orders ADD CONSTRAINT amount_check CHECK (amount > 0);
+
+INSERT INTO orders (region, item, amount)
+VALUES ('North', 'Apple', 201);
+
+INSERT INTO orders (region, item, amount)
+VALUES ('South', 'Banana', 301);
+
+INSERT INTO orders (region, item, amount)
+VALUES ('East', 'Cherry', 401);
+
+INSERT INTO orders (region, item, amount)
+VALUES ('West', 'Date', 301);
+
+INSERT INTO orders (region, item, amount)
+VALUES ('East', 'Elderberry', 301);
+
+INSERT INTO orders (region, item, amount)
+VALUES ('West', 'Fig', 401);
