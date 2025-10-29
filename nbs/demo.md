@@ -217,7 +217,7 @@ print(merge_mock_cte_with_sql(mock_cte, sql))
     
 
 
-Next, we pass the SQL to a query runner. For unit tests, your database URL should point to a locally running database. I'm running a test DB using Docker. See the source code `README.md` for setup steps.
+Next, we pass the SQL to a query runner. For unit tests, your database URL should point to a locally running database. I'm running a test DB using Docker. See the source code [README.md](https://github.com/paulzuradzki/unit-testing-sql) for setup steps.
 
 
 ```python
@@ -325,16 +325,13 @@ def test_sum_and_pivot(db_conn):
 
 ## In Closing
 
-To recap, TL;DR:
-
-1. SQL can be tricky to test due to dependencies on schema, input data, and a database query engine. In addition, SQL in the wild is often verbose and hard to isolate into testable units.
-2. Swapping in a common table expression for your table at test time is one way to achieve reproducible, isolated, and focused unit tests for SQL code.
-
 Hopefully by seeing that you *can* unit test SQL, you might spot opportunities to strengthen your automated code verification.
 
-How do you test your SQL? Drop me a note if you enjoyed the post or learned something new.
+How do you test your SQL? Drop me a [note](https://paulzuradzki.com/about/) if you enjoyed the post or learned something new.
 
 Links
 
 - **Credits**: I originally encountered this technique in this talk: [Unleashing Confidence in SQL Development through Unit Testing - Tobias Lampert](https://www.youtube.com/watch?v=YRVTWwFFd8c). By following along in this post, you get more annotated, implementation detail.
 - For source code behind this post, the repository is located here: [https://github.com/paulzuradzki/unit-testing-sql](https://github.com/paulzuradzki/unit-testing-sql)
+
+
