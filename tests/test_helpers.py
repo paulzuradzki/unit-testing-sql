@@ -102,6 +102,7 @@ select * from grouped"""
 
     assert result == expected
 
+
 def test_merge_mock_cte_with_sql_no_with_keyword():
     """Test merging a mock CTE with SQL that doesn't have a with keyword"""
     mock_cte = """\
@@ -177,6 +178,7 @@ grouped as (select * from orders) select * from grouped"""
 
     assert result == expected
 
+
 def test_merge_mock_cte_with_sql_lowercase_with():
     """Test that merging is lowercase with"""
     mock_cte = """\
@@ -187,7 +189,7 @@ with orders as (
     sql = """\
 with grouped as (select * from orders) select * from grouped"""
 
-    result = merge_mock_cte_with_sql(mock_cte, sql) 
+    result = merge_mock_cte_with_sql(mock_cte, sql)
 
     expected = """\
 with orders as (
@@ -196,7 +198,8 @@ with orders as (
 grouped as (select * from orders) select * from grouped"""
 
     assert result == expected
-    
+
+
 def test_merge_mock_cte_with_sql_uppercase_with():
     """Test that merging is uppercase with"""
     mock_cte = """\
@@ -207,8 +210,8 @@ with orders as (
     sql = """\
 WITH grouped as (select * from orders) select * from grouped"""
 
-    result = merge_mock_cte_with_sql(mock_cte, sql) 
-    
+    result = merge_mock_cte_with_sql(mock_cte, sql)
+
     expected = """\
 with orders as (
     select 1 as id

@@ -1,5 +1,6 @@
 import re
 
+
 def create_mock_cte(table_name: str, rows: list[dict]) -> str:
     """
     Generate a SQL CTE from test data rows.
@@ -80,12 +81,14 @@ def merge_mock_cte_with_sql(mock_cte: str, sql: str) -> str:
     mock_cte = mock_cte.rstrip()
 
     # Check if SQL has a WITH clause
-    has_with_clause = bool(re.search(r'\bwith\s+', sql, flags=re.IGNORECASE))
+    has_with_clause = bool(re.search(r"\bwith\s+", sql, flags=re.IGNORECASE))
 
     if has_with_clause:
         # Add comma separator and replace the first "with"
         mock_cte_with_comma = mock_cte + ","
-        merged = re.sub(r'\bwith\s+', mock_cte_with_comma + "\n", sql, count=1, flags=re.IGNORECASE)
+        merged = re.sub(
+            r"\bwith\s+", mock_cte_with_comma + "\n", sql, count=1, flags=re.IGNORECASE
+        )
     else:
         # No WITH clause, just prepend the mock CTE with a newline
         merged = mock_cte + "\n" + sql

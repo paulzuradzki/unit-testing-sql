@@ -22,6 +22,7 @@ def run_sql(conn: psycopg2.connect, sql: str) -> dict[str, int]:
 
     return data
 
+
 def sum_and_pivot(conn: psycopg2.connect, verbose: bool = False) -> dict[str, int]:
     """
     Execute pivot query on orders data.
@@ -40,5 +41,3 @@ def pivot_and_unpivot(conn: psycopg2.connect, verbose: bool = False) -> dict[str
     if verbose:
         print(format_sql(sql))
     return run_sql(conn, sql)
-
-
