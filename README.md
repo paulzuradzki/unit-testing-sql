@@ -16,7 +16,12 @@ The from-scratch approach is to illustrate for minimal dependencies and for lear
 
 See the related post here: [Unit Testing SQL](https://paulzuradzki.com/2025/10/unit-testing-sql/)
 
+<details>
+
+<summary>
+
 ## Database Setup
+</summary>
 
 ### Starting PostgreSQL
 
@@ -67,8 +72,13 @@ createdb -h localhost demo
 PGPORT=5433 psql -h localhost test < src/app/sql/seed_data.sql
 PGPORT=5433 psql -h localhost demo < src/app/sql/seed_data.sql
 ```
+</details>
+
+<details>
+<summary>
 
 ## Testing
+</summary>
 
 Run tests using uv:
 
@@ -78,6 +88,8 @@ uv run pytest -v
 ```
 
 The tests use mock CTEs to replace database tables, allowing SQL logic testing without requiring seed data.
+
+</details>
 
 # References
 
