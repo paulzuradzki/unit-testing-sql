@@ -30,6 +30,9 @@ from app.transform import run_sql
 from helpers import create_mock_cte, merge_mock_cte_with_sql
 from app.format import format_sql
 
+import sqlite3
+import sqlglot
+
 
 def test_pivot_and_sum(db_conn):
     #########
@@ -307,3 +310,44 @@ def test_pivot_and_unpivot_data(db_conn):
 
     # Assert
     assert result == expected
+
+
+def test_pivot_and_unpivot_sqlglot():
+    # ARRANGE - Setup database and data
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE orders (region TEXT, item TEXT, amount INTEGER)")
+
+    default_order_item = {"region": "North", "item": "Apple", "amount": 100}
+
+    input_data = [
+        default_order_item | {"region": "North", "amount": 100},
+        default_order_item | {"region": "South", "amount": 200},
+        default_order_item | {"region": "East", "amount": 300},
+        default_order_item | {"region": "West", "amount": 400},
+        default_order_item | {"region": "East", "amount": 300},
+        default_order_item | {"region": "West", "amount": 400},
+    ]
+
+    conn.executemany(
+        "INSERT INTO orders (region, item, amount) VALUES (:region, :item, :amount)",
+        input_data,
+    )
+
+    # Transpile and execute SQL
+    source_sql = files("app").joinpath("sql/pivot_and_unpivot.sql").read_text()
+    sql_stmt = sqlglot.transpile(source_sql, read="postgres", write="sqlite")[0]
+
+    # ACT
+    cursor = conn.execute(sql_stmt)
+    result_data = [
+        dict(zip([d[0] for d in cursor.description], row)) for row in cursor.fetchall()
+    ]
+
+    # ASSERT
+    expected_data = [
+        {"region": "East", "sale_amount": 600},
+        {"region": "North", "sale_amount": 100},
+        {"region": "South", "sale_amount": 200},
+        {"region": "West", "sale_amount": 800},
+    ]
+    assert result_data == expected_data

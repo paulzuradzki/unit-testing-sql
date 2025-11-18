@@ -1,6 +1,6 @@
 /* Pivot and unpivot 
 
-This is just to demo testing a multi-step CTE.
+Demo testing a multi-step CTE
 */
 WITH grouped AS
   (SELECT region, sum(amount) AS sale_amount
