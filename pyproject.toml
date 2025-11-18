@@ -5,6 +5,8 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "dbt-core>=1.10.15",
+    "dbt-postgres>=1.9.1",
     "ipykernel>=7.1.0",
     "psycopg2>=2.9.11",
     "python-dotenv>=1.2.1",

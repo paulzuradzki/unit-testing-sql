@@ -1,0 +1,25 @@
+unit_tests:
+  - name: test_hello_world_output
+    model: hello_world
+    given: []
+    expect:
+      rows:
+        - {greeting: 'Hello', subject: 'World'}
+
+  - name: test_pivot_and_unpivot_output
+    model: pivot_and_unpivot
+    given:
+      - input: ref('orders')
+        rows:
+          - {region: 'North', item: 'Apple', amount: 100}
+          - {region: 'South', item: 'Apple', amount: 200}
+          - {region: 'East', item: 'Apple', amount: 300}
+          - {region: 'West', item: 'Apple', amount: 400}
+          - {region: 'East', item: 'Apple', amount: 300}
+          - {region: 'West', item: 'Apple', amount: 400}
+    expect:
+      rows:
+        - {region: 'East', sale_amount: 600}
+        - {region: 'North', sale_amount: 100}
+        - {region: 'South', sale_amount: 200}
+        - {region: 'West', sale_amount: 800}

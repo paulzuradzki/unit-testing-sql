@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: hello_world
+    columns:
+      - name: greeting
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Hello']
+      - name: subject
+        tests:
+          - not_null

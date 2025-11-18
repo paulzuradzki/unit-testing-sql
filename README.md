@@ -91,6 +91,10 @@ The tests use mock CTEs to replace database tables, allowing SQL logic testing w
 
 </details>
 
+# dbt
+
+For dbt setup and usage instructions, see [dbt Setup Guide](dbt_dev/docs/dbt-setup.md).
+
 # References
 
 - Inspired by this talk: [Unleashing Confidence in SQL Development through Unit Testing - Tobias Lampert (Lotum)](https://www.youtube.com/watch?v=YRVTWwFFd8c)
